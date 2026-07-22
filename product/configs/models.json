@@ -1,0 +1,66 @@
+{
+  "models": [
+    {
+      "name": "llama3.2",
+      "description": "Meta Llama 3.2 8B – Beste Allround-Performance, Multilingual, 8K Kontext",
+      "vramGb": 8,
+      "tags": ["general", "multilingual", "fast"],
+      "command": "ollama pull llama3.2"
+    },
+    {
+      "name": "llama3.2:3b",
+      "description": "Llama 3.2 3B – Blitzschnell, ideal für Echtzeit-Chat, wenig RAM",
+      "vramGb": 3,
+      "tags": ["lightweight", "fast", "realtime"],
+      "command": "ollama pull llama3.2:3b"
+    },
+    {
+      "name": "mistral",
+      "description": "Mistral 7B – Exzellent in Deutsch, logisch, präzise",
+      "vramGb": 8,
+      "tags": ["german", "logic", "code"],
+      "command": "ollama pull mistral"
+    },
+    {
+      "name": "deepseek-r1:8b",
+      "description": "DeepSeek R1 8B – Reasoning-Spezialist, Schritt-für-Schritt-Denken",
+      "vramGb": 10,
+      "tags": ["reasoning", "math", "logic"],
+      "command": "ollama pull deepseek-r1:8b"
+    },
+    {
+      "name": "phi4",
+      "description": "Microsoft Phi-4 14B – Kompakt & leistungsstark, Code & Mathematik",
+      "vramGb": 12,
+      "tags": ["code", "math", "microsoft"],
+      "command": "ollama pull phi4"
+    },
+    {
+      "name": "qwen2.5:7b",
+      "description": "Qwen 2.5 7B – Starke Instruction-Following, multilingual",
+      "vramGb": 7,
+      "tags": ["instruction", "multilingual", "code"],
+      "command": "ollama pull qwen2.5:7b"
+    },
+    {
+      "name": "qwen2.5:32b",
+      "description": "Qwen 2.5 32B Q4 – Enterprise-Level, benötigt 20GB+ VRAM (ab RTX 3090)",
+      "vramGb": 20,
+      "tags": ["enterprise", "large", "powerful"],
+      "command": "ollama pull qwen2.5:32b"
+    },
+    {
+      "name": "nomic-embed-text",
+      "description": "Embeddings-Modell für RAG und Vektorsuche",
+      "vramGb": 2,
+      "tags": ["embeddings", "rag", "vector"],
+      "command": "ollama pull nomic-embed-text"
+    }
+  ],
+  "recommendations": {
+    "rtx_3080_20gb": ["llama3.2", "mistral", "deepseek-r1:8b", "phi4", "nomic-embed-text"],
+    "rtx_4090_24gb": ["llama3.2", "deepseek-r1:8b", "qwen2.5:32b", "phi4", "nomic-embed-text"],
+    "rtx_3060_12gb": ["llama3.2:3b", "mistral", "qwen2.5:7b", "nomic-embed-text"],
+    "minimum": ["llama3.2:3b"]
+  }
+}

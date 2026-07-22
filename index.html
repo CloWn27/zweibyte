@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>zweibyte – Local AI Infrastructure for Developers</title>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0b;
+      --bg-card: #121214;
+      --bg-card-hover: #18181b;
+      --border: #232325;
+      --border-hover: #353539;
+      --text-primary: #f4f4f5;
+      --text-secondary: #a1a1aa;
+      --text-tertiary: #71717a;
+      --accent: #8b5cf6;
+      --accent-hover: #a78bfa;
+      --accent-glow: rgba(139, 92, 246, 0.25);
+      --accent-subtle: rgba(139, 92, 246, 0.08);
+      --green: #22c55e;
+      --green-subtle: rgba(34, 197, 94, 0.1);
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --radius: 8px;
+      --radius-sm: 6px;
+      --max-w: 1200px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Geist', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: white;
+    }
+
+    .container {
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(10, 10, 11, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .logo {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--accent);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: white;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-cta {
+      background: var(--accent);
+      color: white !important;
+      padding: 8px 20px;
+      border-radius: var(--radius-sm);
+      font-weight: 500;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--accent-hover) !important; }
+
+    /* ─── HERO ─── */
+    .hero {
+      padding: 120px 0 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      background: var(--accent-subtle);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 9999px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(40px, 7vw, 72px);
+      font-weight: 600;
+      letter-spacing: -2.5px;
+      line-height: 1.05;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent), #c4b5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: clamp(16px, 2vw, 20px);
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      background: transparent;
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      font-size: 15px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-card);
+    }
+
+    /* ─── TERMINAL DEMO ─── */
+    .terminal-demo {
+      margin: 60px auto 0;
+      max-width: 720px;
+      background: #000;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      text-align: left;
+    }
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+    }
+    .terminal-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .terminal-dot:nth-child(1) { background: #ef4444; }
+    .terminal-dot:nth-child(2) { background: #f59e0b; }
+    .terminal-dot:nth-child(3) { background: #22c55e; }
+    .terminal-title {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      font-family: 'Geist Mono', monospace;
+      margin-left: 8px;
+    }
+    .terminal-body {
+      padding: 20px 24px;
+      font-family: 'Geist Mono', monospace;
+      font-size: 13px;
+      line-height: 1.8;
+      color: #a1a1aa;
+    }
+    .terminal-body .prompt { color: var(--green); }
+    .terminal-body .cmd { color: #e4e4e7; }
+    .terminal-body .output { color: var(--text-tertiary); }
+    .terminal-body .highlight { color: var(--accent); }
+    .terminal-cursor {
+      display: inline-block;
+      width: 7px;
+      height: 16px;
+      background: var(--accent);
+      animation: blink 1s step-end infinite;
+      vertical-align: text-bottom;
+    }
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    /* ─── SECTIONS ─── */
+    section { padding: 100px 0; }
+    .section-label {
+      font-family: 'Geist Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 600;
+      letter-spacing: -1.2px;
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+    .section-desc {
+      font-size: 17px;
+      color: var(--text-secondary);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* ─── PROBLEM / SOLUTION ─── */
+    .problem-solution {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-top: 48px;
+    }
+    .ps-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      transition: border-color 0.2s;
+    }
+    .ps-card:hover { border-color: var(--border-hover); }
+    .ps-card.problem { border-color: rgba(239, 68, 68, 0.2); }
+    .ps-card.problem:hover { border-color: rgba(239, 68, 68, 0.4); }
+    .ps-card.solution { border-color: rgba(139, 92, 246, 0.2); }
+    .ps-card.solution:hover { border-color: rgba(139, 92, 246, 0.4); }
+    .ps-icon {
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+    .ps-card h3 {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: -0.4px;
+      margin-bottom: 12px;
+    }
+    .ps-card p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+    .ps-card ul {
+      list-style: none;
+      margin-top: 16px;
+    }
+    .ps-card ul li {
+      padding: 6px 0;
+      color: var(--text-secondary);
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ps-card ul li::before {
+      content: '✗';
+      color: var(--red);
+      font-size: 12px;
+    }
+    .ps-card.solution ul li::before {
+      content: '✓';
+      color: var(--green);
+    }
+
+    /* ─── FEATURES ─── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: all 0.2s;
+    }
+    .feature-card:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+    .feature-icon {
+      width: 40px;
+      height: 40px;
+      background: var(--accent-subtle);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+    .feature-card h3 {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    /* ─── WHAT'S INSIDE ─── */
+    .contents-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 48px;
+    }
+    .content-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    .content-item .check {
+      color: var(--green);
+      font-size: 16px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .content-item .text {
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .content-item .text strong {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .content-item .text span {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+
+    /* ─── PRICING ─── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 48px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 36px 32px;
+      text-align: center;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .pricing-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    .pricing-card.featured {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(139,92,246,0.05), transparent);
+    }
+    .pricing-card.featured::before {
+      content: 'EMPFEHLUNG';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 2px 14px;
+      background: var(--accent);
+      color: white;
+      border-radius: 9999px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      font-family: 'Geist Mono', monospace;
+    }
+    .pricing-card .price {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -2px;
+      color: var(--text-primary);
+      margin: 16px 0 4px;
+    }
+    .pricing-card .price span {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--text-tertiary);
+      letter-spacing: 0;
+    }
+    .pricing-card .period {
+      color: var(--text-tertiary);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .pricing-card ul {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 28px;
+    }
+    .pricing-card ul li {
+      padding: 8px 0;
+      font-size: 14px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .pricing-card ul li:last-child { border-bottom: none; }
+    .pricing-card ul li::before {
+      content: '✓';
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    /* ─── FAQ ─── */
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 48px;
+    }
+    .faq-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 20px 24px;
+    }
+    .faq-item h4 {
+      font-size: 15px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    .faq-item p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0;
+    }
+    footer .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    footer .copy {
+      font-size: 14px;
+      color: var(--text-tertiary);
+    }
+    footer .links {
+      display: flex;
+      gap: 24px;
+    }
+    footer .links a {
+      color: var(--text-tertiary);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+    footer .links a:hover { color: var(--text-secondary); }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .problem-solution,
+      .features-grid,
+      .contents-list,
+      .pricing-grid,
+      .faq-grid { grid-template-columns: 1fr; }
+      .hero { padding: 80px 0 60px; }
+      section { padding: 60px 0; }
+      footer .container { flex-direction: column; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAV ═══ -->
+  <nav>
+    <div class="container">
+      <div class="logo">
+        <div class="logo-icon">z</div>
+        zweibyte
+      </div>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="#pricing" class="nav-cta">Kaufen</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge">🚀 2026 • Lokale KI • CUDA • MCP</div>
+      <h1>
+        Lokale KI-Infrastruktur<br>
+        für <span>Developer</span>
+      </h1>
+      <p>
+        Zero-Friction Setup für Ollama, GPU-beschleunigte LLMs, MCP-Server & WebUI.
+        Alles lokal auf deiner NVIDIA GPU. Keine Cloud-Kosten. Keine Datenschutz-Risiken.
+      </p>
+      <div class="hero-actions">
+        <a href="#pricing" class="btn-primary">💰 Jetzt kaufen – $49</a>
+        <a href="#features" class="btn-secondary">Features entdecken →</a>
+      </div>
+
+      <!-- Terminal Demo -->
+      <div class="terminal-demo">
+        <div class="terminal-header">
+          <span class="terminal-dot"></span>
+          <span class="terminal-dot"></span>
+          <span class="terminal-dot"></span>
+          <span class="terminal-title">~/zweibyte — zsh</span>
+        </div>
+        <div class="terminal-body">
+          <span class="prompt">$</span> <span class="cmd">curl -fsSL https://zweibyte.net/install.sh | bash</span><br>
+          <span class="output">▸ Prüfe System… NVIDIA GeForce RTX 3080 ✓<br>
+          ▸ Installiere Ollama… <span class="highlight">✓</span><br>
+          ▸ Konfiguriere CUDA-Optimierung… <span class="highlight">✓</span><br>
+          ▸ Richte WebUI ein… <span class="highlight">✓</span><br>
+          ▸ Aktiviere MCP-Server… <span class="highlight">✓</span></span><br>
+          <span class="prompt">$</span> <span class="cmd">./zweibyte status</span><br>
+          <span class="output">╭─────────────────────────────────╮<br>
+          │ ▼ Zweibyte CLI • System Status   │<br>
+          │ GPU : RTX 3080 • 20 GB VRAM     │<br>
+          │ LLM : llama3.2 • 8 KB ctx       │<br>
+          │ WebUI: http://localhost:3000     │<br>
+          │ MCP  : 3 Server aktiv            │<br>
+          ╰─────────────────────────────────╯</span>
+          <span class="terminal-cursor"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PROBLEM / SOLUTION ═══ -->
+  <section>
+    <div class="container">
+      <div class="problem-solution">
+        <div class="ps-card problem">
+          <div class="ps-icon">😤</div>
+          <h3>Das Problem</h3>
+          <p>Lokale KI aufzusetzen ist ein Albtraum:</p>
+          <ul>
+            <li>Ollama, CUDA, WebUI – alles einzeln installieren</li>
+            <li>GPU-Tuning, VRAM-Management von Hand</li>
+            <li>MCP-Server? Wochenlange Recherche</li>
+            <li>Cloud APIs: teuer, langsam, Datenleck</li>
+          </ul>
+        </div>
+        <div class="ps-card solution">
+          <div class="ps-icon">⚡</div>
+          <h3>Die Lösung – Zweibyte Pro Kit</h3>
+          <p>Ein Befehl. Fertig.</p>
+          <ul>
+            <li>1-Click-Setup: Ollama + WebUI + MCP</li>
+            <li>Automatisches GPU-Tuning (CUDA 12)</li>
+            <li>5 vorkonfigurierte MCP-Server</li>
+            <li>Alles lokal. Deine Daten. Deine GPU.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FEATURES ═══ -->
+  <section id="features">
+    <div class="container">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Was du bekommst</h2>
+      <p class="section-desc">Ein komplettes Ökosystem für lokale KI – entwickelt und getestet auf NVIDIA GPUs.</p>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🖥️</div>
+          <h3>1-Click Setup</h3>
+          <p>Ein Befehl installiert Ollama, konfiguriert CUDA, richtet Open WebUI ein und startet MCP-Server. Kein manuelles Herumdoktern.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎮</div>
+          <h3>GPU-Optimierung</h3>
+          <p>CUDA 12 Kernel, VRAM-Management, Batch-Größen-Tuning – alles auf deine RTX abgestimmt. Benchmarks inklusive.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔌</div>
+          <h3>MCP Server Integration</h3>
+          <p>5 sofort einsatzbereite MCP-Server: Filesystem, GitHub, PostgreSQL, Web Search, Custom Tools. Fertig konfiguriert.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔒</div>
+          <h3>100% Lokal & Privat</h3>
+          <p>Keine Cloud, keine Telemetrie, keine API-Keys nötig. Deine Daten verlassen nie deinen Rechner.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📦</div>
+          <h3>Modelle + Manager</h3>
+          <p>Llama 3.2, Mistral, DeepSeek, Phi-4 – vorbereitete Modell-Configs plus CLI-Manager zum Downloaden & Wechseln.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📚</div>
+          <h3>Dokumentation + Guide</h3>
+          <p>50+ Seiten Troubleshooting-Guide. CUDA-Fehler, OOM-Probleme, MCP-Debugging – jede Lösung getestet.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>Open WebUI</h3>
+          <p>Chat-Interface mit Dark Mode, RAG-Unterstützung, Multi-Modell-Switching und Plugin-System.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔄</div>
+          <h3>Lifetime Updates</h3>
+          <p>Einmal kaufen. Alle zukünftigen Versionen, neuen MCP-Server und Optimierungen kostenlos.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🐳</div>
+          <h3>Docker-Ready</h3>
+          <p>Docker-Compose-Setups für isolierte Umgebungen. Inklusive GPU-Passthrough-Konfiguration.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ WHAT'S INSIDE ═══ -->
+  <section>
+    <div class="container">
+      <div class="section-label">Paketinhalt</div>
+      <h2 class="section-title">Was im Local AI Pro Kit steckt</h2>
+      <p class="section-desc">Digitales Produkt – sofort nach dem Kauf als ZIP downloadbar.</p>
+
+      <div class="contents-list">
+        <div class="content-item">
+          <span class="check">✓</span>
+          <div class="text"><strong>install.sh</strong><br><span>Automatisiertes Setup-Script (Ollama + CUDA + WebUI + MCP)</span></div>
+        </div>
+        <div class="content-item">
+          <span class="check">✓</span>
+          <div class="text"><strong>zweibyte CLI</strong><br><span>Node.js CLI zum Managen von Modellen, GPU-Status, Servern</span></div>
+        </div>
+        <div class="content-item">
+          <span class="check">✓</span>
+          <div class="text"><strong>5× MCP Server Configs</strong><br><span>Filesystem, GitHub, PostgreSQL, Web Search, Custom MCP Blueprint</span></div>
+        </div>
+        <div class="content-item">
+          <span class="check">✓</span>
+          <div class="text"><strong>GPU Tuning Guide</strong><br><span>VRAM-Optimierung, Batch-Sizing, CUDA-Kernel-Flags für maximale Performance</span></div>
+        </div>
+        <div class="content-item">
+          <span class="check">✓</span>
+          <div class="text"><strong>Model Manager</strong><br><span>5 Modell-Configs + Download-Script (Llama 3, Mistral, DeepSeek, Phi-4, Qwen)</span></div>
+        </div>
+        <div class="content-item">
+          <span class="check">✓</span>
+          <div class="text"><strong>Open WebUI Docker-Compose</strong><br><span>Fertige docker-compose.yml mit GPU-Passthrough + Konfiguration</span></div>
+        </div>
+        <div class="content-item">
+          <span class="check">✓</span>
+          <div class="text"><strong>Troubleshooting-Guide</strong><br><span>50+ Seiten: CUDA-Fehler, OOM, Treiber-Probleme, MCP-Debugging</span></div>
+        </div>
+        <div class="content-item">
+          <span class="check">✓</span>
+          <div class="text"><strong>Lifetime Updates</strong><br><span>Alle zukünftigen Versionen & neuen Features kostenlos per Download</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PRICING ═══ -->
+  <section id="pricing">
+    <div class="container">
+      <div class="section-label">Pricing</div>
+      <h2 class="section-title">Wähle dein Paket</h2>
+      <p class="section-desc">Einmalige Zahlung. Keine Abos. Keine versteckten Kosten.</p>
+
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h3 style="font-size:20px; font-weight:600;">Starter</h3>
+          <div class="price">$19 <span>einmalig</span></div>
+          <div class="period">Nur das Setup-Script</div>
+          <ul>
+            <li>install.sh (Ollama + CUDA + WebUI)</li>
+            <li>GPU-Tuning Guide (PDF)</li>
+            <li>1 MCP Server Config</li>
+            <li>E-Mail-Support 7 Tage</li>
+          </ul>
+          <a href="#" class="btn-primary" style="width:100%; justify-content:center;">Kaufen – $19</a>
+        </div>
+
+        <div class="pricing-card featured">
+          <h3 style="font-size:20px; font-weight:600;">Pro Kit</h3>
+          <div class="price">$49 <span>einmalig</span></div>
+          <div class="period">Das komplette Paket</div>
+          <ul>
+            <li>Alles aus Starter</li>
+            <li>zweibyte CLI (GPU-Status, Modell-Manager)</li>
+            <li>5 MCP Server Configs + Blueprint</li>
+            <li>Model Manager (5 Modelle, 1-Click-Download)</li>
+            <li>Docker-Compose + GPU-Passthrough</li>
+            <li>Troubleshooting-Guide (50+ Seiten)</li>
+            <li><strong>Lifetime Updates</strong></li>
+            <li>E-Mail-Support 30 Tage</li>
+          </ul>
+          <a href="#" class="btn-primary" style="width:100%; justify-content:center;">🔥 Kaufen – $49</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FAQ ═══ -->
+  <section id="faq">
+    <div class="container">
+      <div class="section-label">FAQ</div>
+      <h2 class="section-title">Häufige Fragen</h2>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <h4>Brauche ich eine NVIDIA GPU?</h4>
+          <p>Ja, das Kit ist für NVIDIA-GPUs mit CUDA 12 optimiert (RTX 20/30/40 Serie, Quadro, Tesla). AMD-Unterstützung ist in Planung.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Welches Betriebssystem?</h4>
+          <p>Linux (Ubuntu 22.04+, Fedora 38+, Arch). macOS mit Apple Silicon wird eingeschränkt unterstützt.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Was ist mit Windows?</h4>
+          <p>Windows über WSL2 wird unterstützt, der Guide enthält eine dedizierte WSL2-Sektion. Native Windows-Unterstützung ist in Arbeit.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Wie bekomme ich Updates?</h4>
+          <p>Nach dem Kauf bekommst du einen Lifetime-Download-Link. Neue Versionen werden dort bereitgestellt.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Kann ich mein Geld zurück?</h4>
+          <p>Ja, 14 Tage Geld-zurück-Garantie. Wenn es nicht funktioniert oder nicht das ist, was du erwartet hast – melde dich.</p>
+        </div>
+        <div class="faq-item">
+          <h4>Ist das nur für Developer?</h4>
+          <p>Grundlegende Terminal-Kenntnisse sind hilfreich, aber das Setup-Script ist so designed, dass es auch ohne Vorkenntnisse durchläuft.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="container">
+      <div class="copy">© 2026 zweibyte.net</div>
+      <div class="links">
+        <a href="mailto:hello@zweibyte.net">Kontakt</a>
+        <a href="#">Impressum</a>
+        <a href="#">Datenschutz</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

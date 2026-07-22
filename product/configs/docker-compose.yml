@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    ports:
+      - "3000:8080"
+    volumes:
+      - open-webui-data:/app/backend/data
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - WEBUI_AUTH=false
+      - WEBUI_NAME=zweibyte AI
+      - ENABLE_SIGNUP=false
+      - DEFAULT_MODELS=llama3.2
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+
+  # MCP Gateway (optional)
+  mcp-gateway:
+    image: node:22-alpine
+    container_name: mcp-gateway
+    ports:
+      - "7100:7100"
+    volumes:
+      - ./mcp:/app/mcp
+      - ./mcp/mcp-servers.json:/app/mcp-servers.json
+    working_dir: /app
+    command: sh -c "npm install -g @modelcontextprotocol/server-filesystem @modelcontextprotocol/server-github @modelcontextprotocol/server-postgres 2>/dev/null; tail -f /dev/null"
+    restart: unless-stopped
+
+volumes:
+  open-webui-data:
